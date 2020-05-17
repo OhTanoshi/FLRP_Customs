@@ -128,7 +128,6 @@ end
 local function DriveInGarage()
 
 	--Lock the garage
-	--TriggerServerEvent('lockGarage',true,currentgarage)
 	SetPlayerControl(PlayerId(),false,256)
 	StartFade()
 	
@@ -589,11 +588,7 @@ local function DriveOutOfGarage(pos)
 		NetworkRegisterEntityAsNetworked(veh)
 		SetEntityVisible(ped, true,0)
 		ClearPedTasks(ped)
-		inside = false
-		
-		--Unlock the garage
-		TriggerServerEvent('lockGarage',false,currentgarage)
-		
+		inside = false		
 		currentgarage = 0
 		
 		DisplayRadar(true)
@@ -1297,14 +1292,6 @@ AddEventHandler('playerSpawned', function(spawn)
 		AddBlips()
 		TriggerServerEvent('getGarageInfo')
 		firstspawn = 1
-	end
-end)
-
---Locks the garage if someone enters it
-RegisterNetEvent('lockGarage')
-AddEventHandler('lockGarage', function(tbl)
-	for i,garage in ipairs(tbl) do
-		garages[i].locked = garage.locked
 	end
 end)
 
