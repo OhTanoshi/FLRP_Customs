@@ -22,20 +22,20 @@ AddEventHandler('playerDropped', function()
 end)
 
 RegisterServerEvent("LSC:buttonSelected")
-AddEventHandler("LSC:buttonSelected", function(name, button)
-	local src = source
-	local character = exports["drp_id"]:GetCharacterData()
 
-	TriggerEvent("DRP_Bank:GetCharacterMoney", character.charid, function(characterMoney)
+AddEventHandler("LSC:buttonSelected", function(name, button)
+    local src = source
+    local dataUser = exports["drp_id"]:GetCharacterData(src)
+
+	TriggerEvent("DRP_Bank:GetCharacterMoney", dataUser.charid, function(characterMoney)
 		local userMoney = characterMoney.data[1].cash
-		
         mymoney = tonumber(button.price)
 
         -- check if button have price
         if button.price then
             if button.price < userMoney then
 				TriggerClientEvent("LSC:buttonSelected", src, name, button, true)
-				TriggerEvent("DRP_Bank:RemoveCashMoney", character.charid, tonumber(button.price))
+				TriggerEvent("DRP_Bank:RemoveCashMoney", dataUser, tonumber(button.price))
                 TriggerClientEvent('LSC:installMod', src)
             else
                 TriggerClientEvent("LSC:buttonSelected", src, name, button, false)
