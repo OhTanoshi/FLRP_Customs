@@ -35,7 +35,7 @@ AddEventHandler("LSC:buttonSelected", function(name, button)
         if button.price then
             if button.price < userMoney then
 				TriggerClientEvent("LSC:buttonSelected", src, name, button, true)
-				TriggerEvent("DRP_Bank:RemoveCashMoney", src, tonumber(button.price))
+				TriggerEvent("DRP_Bank:RemoveCashMoney", dataUser.charid, tonumber(button.price))
                 TriggerClientEvent('LSC:installMod', src)
             else
                 TriggerClientEvent("LSC:buttonSelected", src, name, button, false)
