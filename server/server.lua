@@ -13,9 +13,9 @@ AddEventHandler('playerDropped', function()
 	for i,g in pairs(tbl) do
 		if g.player then
 			if source == g.player then
-				g.locked = false
+				--g.locked = false
 				g.player = nil
-				TriggerClientEvent('lockGarage',-1,tbl)
+				--TriggerClientEvent('lockGarage',-1,tbl)
 			end
 		end
 	end
