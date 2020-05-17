@@ -24,7 +24,7 @@ end)
 RegisterServerEvent("LSC:buttonSelected")
 AddEventHandler("LSC:buttonSelected", function(name, button)
 	local src = source
-	local character = exports["drp_id"]:GetCharacterData(src)
+	local character = exports["drp_id"]:GetCharacterData()
 
 	TriggerEvent("DRP_Bank:GetCharacterMoney", character.charid, function(characterMoney)
 		local userMoney = characterMoney.data[1].cash
