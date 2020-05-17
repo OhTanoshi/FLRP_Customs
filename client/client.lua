@@ -630,7 +630,7 @@ local function tableContains(t,val)
 	return false
 end
 
---Magical loop that allows you to  drive in garage if you successfully go through checks
+--Loop that opens garage if you successfully go through checks
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
@@ -1266,34 +1266,6 @@ function UnfakeVeh()
 	SetVehicleNumberPlateTextIndex(veh, myveh.plateindex)
 	SetVehicleWindowTint(veh, myveh.windowtint)
 end
-
---Still the good old way of adding blips
-local function AddBlips()
-	for i,pos in ipairs(garages) do
-		local blip = AddBlipForCoord(pos.inside.x,pos.inside.y,pos.inside.z)
-		SetBlipSprite(blip, 72)
-		SetBlipAsShortRange(blip,true)
-		if i == 5 then
-			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString("Beeker's Garage")
-			EndTextCommandSetBlipName(blip)
-		elseif i == 6 then
-			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString("Benny's Motorworks")
-			EndTextCommandSetBlipName(blip)
-		end
-	end
-end
-
---Adding all blips on first spawn
-local firstspawn = 0
-AddEventHandler('playerSpawned', function(spawn)
-	if firstspawn == 0 then
-		AddBlips()
-		TriggerServerEvent('getGarageInfo')
-		firstspawn = 1
-	end
-end)
 
 --This is something new o_O, just some things to draw instructional buttons 
 local Ibuttons = nil
