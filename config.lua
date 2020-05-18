@@ -768,3 +768,6 @@ LSC_Config.menu = {
 	height = 0.36
 
 }
+
+-----Blips-----
+LSC_Config.blips = false -- Toggle blips for lscustoms locations
