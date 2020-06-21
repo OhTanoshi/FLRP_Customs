@@ -13,7 +13,9 @@ AddEventHandler('playerDropped', function()
 	for i,g in pairs(tbl) do
 		if g.player then
 			if source == g.player then
+				g.locked = false
 				g.player = nil
+				TriggerClientEvent('lockGarage',-1,tbl)
 			end
 		end
 	end
@@ -24,10 +26,9 @@ RegisterServerEvent("LSC:buttonSelected")
 AddEventHandler("LSC:buttonSelected", function(name, button)
     local src = source
     local dataUser = exports["drp_id"]:GetCharacterData(src)
-
 	TriggerEvent("DRP_Bank:GetCharacterMoney", dataUser.charid, function(characterMoney)
 		local userMoney = characterMoney.data[1].cash
-        mymoney = tonumber(button.price)
+        local mymoney = tonumber(button.price)
 
         -- check if button have price
         if button.price then

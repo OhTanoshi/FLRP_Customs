@@ -1268,13 +1268,13 @@ end
 function CanPurchase(price, canpurchase)
 	if canpurchase then
 		if LSCMenu.currentmenu == "main" then
-			LSCMenu:showNotification("Vehiculul tau a fost reparat.")
+			LSCMenu:showNotification("Your vehicle has been repaired.")
 		else
-			LSCMenu:showNotification("Componenta achizitionata.")
+			LSCMenu:showNotification("Item purchased.")
 		end
 		return true
 	else
-		LSCMenu:showNotification("~r~Nu-ti permiti aceasta componenta.")
+		LSCMenu:showNotification("~r~You cannot afford this.")
 		return false
 	end
 end

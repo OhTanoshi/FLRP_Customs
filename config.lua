@@ -162,7 +162,23 @@ LSC_Config.prices = {
 		colors = metalcolors,
 		price = 300
 	},
+	lightscolor = {
+		{ name = "Red", color = 8, price = 180},
+		{ name = "White", color = 0, price = 180},
+		{ name = "Blue", color = 1, price = 180},
+		{ name = "Electric Blue", color = 2, price = 180},
+		{ name = "Mint Green", color = 3, price = 180},
+		{ name = "Lime reen", color = 4, price = 180},
+		{ name = "Yellow", color = 5, price = 180},
+		{ name = "Gold", color = 6, price = 180},
+		{ name = "Orange", color = 7, price = 180},
+		{ name = "Pink", color = 9, price = 180},
+		{ name = "Another Pink", color = 10, price = 180},
+		{ name = "Purple", color = 11, price = 180},
+		{ name = "Blacklight", color = 12, price = 180},
 
+		
+	},
 ------Neon layout------
 	neonlayout = {
 		{name = "Front,Back and Sides", price = 5000},
@@ -717,7 +733,7 @@ LSC_Config.ModelBlacklist = {
 }
 
 --Sets if garage will be locked if someone is inside it already
-LSC_Config.lock = false
+LSC_Config.lock = true
 
 --Enable/disable old entering way
 LSC_Config.oldenter = false
@@ -752,7 +768,7 @@ LSC_Config.menu = {
 		stext_color = { r = 0,g = 0, b = 0, a = 255},
 		sbg_color = { r = 255,g = 255, b = 0, a = 200},
 	},]]
-	theme = "light",
+	theme = "darkred",
 	
 --------Max buttons------
 	--Default: 10
@@ -768,6 +784,3 @@ LSC_Config.menu = {
 	height = 0.36
 
 }
-
------Blips-----
-LSC_Config.blips = false -- Toggle blips for lscustoms locations
