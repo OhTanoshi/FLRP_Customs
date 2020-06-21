@@ -68,7 +68,7 @@ local function EndFade()
 end
 
 --Setup main menu
-local LSCMenu = Menu.new("Los Santos Customs","CATEGORIES", 0.16,0.13,0.24,0.36,0,{255,255,255,255})
+local LSCMenu = Menu.new("Custom Tunning","Categories", 0.16,0.13,0.24,0.36,0,{255,255,255,255})
 LSCMenu.config.pcontrol = false
 
 --Add mod to menu
@@ -128,6 +128,7 @@ end
 local function DriveInGarage()
 
 	--Lock the garage
+	--TriggerServerEvent('lockGarage',true,currentgarage)
 	SetPlayerControl(PlayerId(),false,256)
 	StartFade()
 	
@@ -197,7 +198,7 @@ local function DriveInGarage()
 			end
 		end
 		
-		LSCMenu:addSubMenu("CATEGORIES", "categories",nil, false)
+		LSCMenu:addSubMenu("Categorii", "categories",nil, false)
 		LSCMenu.categories.buttons = {}
 		--Calculate price for vehicle repair and add repair  button
 		local maxvehhp = 1000
@@ -212,6 +213,7 @@ local function DriveInGarage()
 		myveh.color =  table.pack(GetVehicleColours(veh))
 		myveh.extracolor = table.pack(GetVehicleExtraColours(veh))
 		myveh.neoncolor = table.pack(GetVehicleNeonLightsColour(veh))
+		myveh.lightscolor = table.pack(GetVehicleXenonLightsColour(veh))
 		myveh.smokecolor = table.pack(GetVehicleTyreSmokeColor(veh))
 		myveh.plateindex = GetVehicleNumberPlateTextIndex(veh)
 		myveh.mods = {}
@@ -332,18 +334,28 @@ local function DriveInGarage()
 		
 		local m = LSCMenu.categories:addSubMenu("LIGHTS", "Lights", "Improved night time visibility.",true)
 		AddMod(22,LSCMenu.categories.Lights,"HEADLIGHTS", "Headlights", nil, false)
+		lightscolor = LSCMenu.categories.Lights:addSubMenu("Lights Color","lightscolor",nil,true)
+			for n, mod in pairs(LSC_Config.prices.lightscolor) do
+				local btn = lightscolor:addPurchase(mod.name,mod.price)btn.culoare = mod.culoare
+			end
+		 
 		if not IsThisModelABike(GetEntityModel(veh)) then
 			m = m:addSubMenu("NEON KITS", "Neon kits", nil, true)
 				m:addSubMenu("NEON LAYOUT", "Neon layout", nil, true)
 					local btn = m["Neon layout"]:addPurchase("None")
 					for n, mod in pairs(LSC_Config.prices.neonlayout) do
 						local btn = m["Neon layout"]:addPurchase(mod.name,mod.price)
+						if btn.culoare == myveh.lightscolor then
+							btn.purchased = true
+						end
 					end
 			
 			m = m:addSubMenu("NEON COLOR", "Neon color", nil, true)
 				for n, mod in pairs(LSC_Config.prices.neoncolor) do
 					local btn = m:addPurchase(mod.name,mod.price)btn.neon = mod.neon
 				end
+
+
 		end
 
 		
@@ -588,7 +600,11 @@ local function DriveOutOfGarage(pos)
 		NetworkRegisterEntityAsNetworked(veh)
 		SetEntityVisible(ped, true,0)
 		ClearPedTasks(ped)
-		inside = false		
+		inside = false
+		
+		--Unlock the garage
+		TriggerServerEvent('lockGarage',false,currentgarage)
+		
 		currentgarage = 0
 		
 		DisplayRadar(true)
@@ -630,7 +646,7 @@ local function tableContains(t,val)
 	return false
 end
 
---Loop that opens garage if you successfully go through checks
+--Magical loop that allows you to  drive in garage if you successfully go through checks
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
@@ -711,6 +727,9 @@ function LSCMenu:onSelectedIndexChanged(name, button)
 		SetVehicleNumberPlateTextIndex(veh,button.plateindex)
 	elseif m == "neon color" then
 		SetVehicleNeonLightsColour(veh,button.neon[1], button.neon[2], button.neon[3])
+	elseif m == "lightscolor" then
+		ToggleVehicleMod(veh, 22, true)
+		SetVehicleXenonLightsColour(veh, button.lightscolor)
 	elseif m == "windows" then
 		SetVehicleWindowTint(veh, button.tint)
 	else
@@ -830,6 +849,12 @@ AddEventHandler("LSC:buttonSelected", function(name, button, canpurchase)
 			myveh.neoncolor[2] = button.neon[2]
 			myveh.neoncolor[3] = button.neon[3]
 			SetVehicleNeonLightsColour(veh,button.neon[1],button.neon[2],button.neon[3])
+		end
+	elseif mname =="lightscolor" then
+		if button.purchased or CanPurchase(price,canpurchase) then
+			myveh.lightscolor = button.culoare
+			ToggleVehicleMod(veh, 22, true)
+			SetVehicleXenonLightsColour(veh,button.culoare)
 		end
 	elseif mname == "windows" then
 		if button.name == "None" or button.purchased or CanPurchase(price, canpurchase) then
@@ -1159,6 +1184,14 @@ function CheckPurchases(m)
 				b.sprite = nil
 			end
 		end
+	elseif name == "lightscolor" then
+		for i,b in pairs(m.buttons) do
+			if b.culoare == myveh.lightscolor then
+				b.sprite = "garage"
+			else
+				b.sprite = nil
+			end
+		end
 	elseif name == "windows" then
 		for i,b in pairs(m.buttons) do
 			if myveh.windowtint == b.tint then
@@ -1220,7 +1253,7 @@ function CheckPurchases(m)
 				b.sprite = nil
 			end
 		end
-	elseif name == "tank" or name == "ornaments" or name == "arch cover" or name == "aerials" or name == "roof scoops" or name == "doors" or name == "roll cage" or name == "engine block" or name == "cam cover" or name == "strut brace" or name == "trim design" or name == "ornametns" or name == "dashboard" or name == "dials" or name == "seats" or name == "steering wheels" or name == "plate holder" or name == "vanity plates" or name == "shifter leavers" or name == "plaques" or name == "speakers" or name == "trunk" or name == "headlights" or name == "turbo" or  name == "hydraulics" or name == "liveries" or name == "horn" then
+	elseif name == "tank" or name == "ornaments" or name == "arch cover" or name == "aerials" or name == "roof scoops" or name == "doors" or name == "roll cage" or name == "engine block" or name == "cam cover" or name == "strut brace" or name == "trim design" or name == "ornametns" or name == "dashboard" or name == "dials" or name == "seats" or name == "steering wheels" or name == "plate holder" or name == "vanity plates" or name == "shifter leavers" or name == "plaques" or name == "speakers" or name == "trunk" or name == "lightscolor" or name == "headlights" or name == "turbo" or  name == "hydraulics" or name == "liveries" or name == "horn" then
 		for i,b in pairs(m.buttons) do
 			if myveh.mods[b.modtype].mod == b.mod then
 				b.sprite = "garage"
@@ -1235,13 +1268,13 @@ end
 function CanPurchase(price, canpurchase)
 	if canpurchase then
 		if LSCMenu.currentmenu == "main" then
-			LSCMenu:showNotification("Your vehicle has been repaired.")
+			LSCMenu:showNotification("Vehiculul tau a fost reparat.")
 		else
-			LSCMenu:showNotification("Item purchased.")
+			LSCMenu:showNotification("Componenta achizitionata.")
 		end
 		return true
 	else
-		LSCMenu:showNotification("~r~You cannot afford this purchase.")
+		LSCMenu:showNotification("~r~Nu-ti permiti aceasta componenta.")
 		return false
 	end
 end
@@ -1267,20 +1300,19 @@ function UnfakeVeh()
 	SetVehicleWindowTint(veh, myveh.windowtint)
 end
 
--- Adds blips
+--Still the good old way of adding blips
 local function AddBlips()
 	for i,pos in ipairs(garages) do
 		local blip = AddBlipForCoord(pos.inside.x,pos.inside.y,pos.inside.z)
 		SetBlipSprite(blip, 72)
 		SetBlipAsShortRange(blip,true)
-		SetBlipScale(blip, 0.6)
 		if i == 5 then
 			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString("Beeker's Garage")
+			AddTextComponentString("Custom Tunning")
 			EndTextCommandSetBlipName(blip)
 		elseif i == 6 then
 			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString("Benny's Motorworks")
+			AddTextComponentString("Custom Tunning")
 			EndTextCommandSetBlipName(blip)
 		end
 	end
@@ -1289,10 +1321,18 @@ end
 --Adding all blips on first spawn
 local firstspawn = 0
 AddEventHandler('playerSpawned', function(spawn)
-	if firstspawn == 0 and LSC_Config.blips then
+	if firstspawn == 0 then
 		AddBlips()
 		TriggerServerEvent('getGarageInfo')
 		firstspawn = 1
+	end
+end)
+
+--Locks the garage if someone enters it
+RegisterNetEvent('lockGarage')
+AddEventHandler('lockGarage', function(tbl)
+	for i,garage in ipairs(tbl) do
+		garages[i].locked = garage.locked
 	end
 end)
 
