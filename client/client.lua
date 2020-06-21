@@ -666,7 +666,7 @@ Citizen.CreateThread(function()
                                 currentpos = pos
                                 DriveInGarage()
                             else
-                                --drawTxt("Press ~b~ENTER~w~ to enter ~b~Los Santos Customs")
+                                drawTxt("Press ~b~ENTER~w~ to enter ~b~Los Santos Customs")
                             end
                         end
                     end
