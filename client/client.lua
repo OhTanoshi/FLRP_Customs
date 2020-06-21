@@ -198,7 +198,7 @@ local function DriveInGarage()
 			end
 		end
 		
-		LSCMenu:addSubMenu("Categories", "categories",nil, false)
+		LSCMenu:addSubMenu("Categorii", "categories",nil, false)
 		LSCMenu.categories.buttons = {}
 		--Calculate price for vehicle repair and add repair  button
 		local maxvehhp = 1000
@@ -336,7 +336,7 @@ local function DriveInGarage()
 		AddMod(22,LSCMenu.categories.Lights,"HEADLIGHTS", "Headlights", nil, false)
 		lightscolor = LSCMenu.categories.Lights:addSubMenu("Lights Color","lightscolor",nil,true)
 			for n, mod in pairs(LSC_Config.prices.lightscolor) do
-				local btn = lightscolor:addPurchase(mod.name,mod.price)btn.culoare = mod.culoare
+				local btn = lightscolor:addPurchase(mod.name,mod.price)btn.color = mod.color
 			end
 		 
 		if not IsThisModelABike(GetEntityModel(veh)) then
@@ -345,7 +345,7 @@ local function DriveInGarage()
 					local btn = m["Neon layout"]:addPurchase("None")
 					for n, mod in pairs(LSC_Config.prices.neonlayout) do
 						local btn = m["Neon layout"]:addPurchase(mod.name,mod.price)
-						if btn.culoare == myveh.lightscolor then
+						if btn.color == myveh.lightscolor then
 							btn.purchased = true
 						end
 					end
@@ -666,7 +666,7 @@ Citizen.CreateThread(function()
                                 currentpos = pos
                                 DriveInGarage()
                             else
-                                drawTxt("Press ~b~ENTER~w~ to enter ~b~Los Santos Customs")
+                                --drawTxt("Press ~b~ENTER~w~ to enter ~b~Los Santos Customs")
                             end
                         end
                     end
@@ -852,9 +852,9 @@ AddEventHandler("LSC:buttonSelected", function(name, button, canpurchase)
 		end
 	elseif mname =="lightscolor" then
 		if button.purchased or CanPurchase(price,canpurchase) then
-			myveh.lightscolor = button.culoare
+			myveh.lightscolor = button.color
 			ToggleVehicleMod(veh, 22, true)
-			SetVehicleXenonLightsColour(veh,button.culoare)
+			SetVehicleXenonLightsColour(veh,button.color)
 		end
 	elseif mname == "windows" then
 		if button.name == "None" or button.purchased or CanPurchase(price, canpurchase) then
@@ -1186,7 +1186,7 @@ function CheckPurchases(m)
 		end
 	elseif name == "lightscolor" then
 		for i,b in pairs(m.buttons) do
-			if b.culoare == myveh.lightscolor then
+			if b.color == myveh.lightscolor then
 				b.sprite = "garage"
 			else
 				b.sprite = nil
@@ -1268,13 +1268,13 @@ end
 function CanPurchase(price, canpurchase)
 	if canpurchase then
 		if LSCMenu.currentmenu == "main" then
-			LSCMenu:showNotification("Your vehicle has been repaired.")
+			LSCMenu:showNotification("Vehiculul tau a fost reparat.")
 		else
-			LSCMenu:showNotification("Component purchased.")
+			LSCMenu:showNotification("Componenta achizitionata.")
 		end
 		return true
 	else
-		LSCMenu:showNotification("~r~You cannot afford this.")
+		LSCMenu:showNotification("~r~Nu-ti permiti aceasta componenta.")
 		return false
 	end
 end
