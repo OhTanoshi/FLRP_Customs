@@ -16,4 +16,3 @@ This customs is based off LS Customs & Bennys made by MythicalBro.
 
 So i cant take credit for the menus and some code.
 
-### THERE IS NO BLIPS OR MARKERS FOR LSCUSTOMS YOU JUST DRIVE INTO ANY LSCUSTOMS AND HIT ENTER!
