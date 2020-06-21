@@ -198,7 +198,7 @@ local function DriveInGarage()
 			end
 		end
 		
-		LSCMenu:addSubMenu("Categorii", "categories",nil, false)
+		LSCMenu:addSubMenu("Categories", "categories",nil, false)
 		LSCMenu.categories.buttons = {}
 		--Calculate price for vehicle repair and add repair  button
 		local maxvehhp = 1000
